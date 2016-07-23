@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import auditsolution.com.br.smartguia.Bluetooth;
+
 
 import java.util.Locale;
 
@@ -27,7 +29,7 @@ public class Home extends AppCompatActivity {
     EditText lb_text;
     Button botaoEnviar;
     String msgSaudacao, verificaBluetooh, verificaSeBluetoothEstaAtivo;
-
+    Bluetooth  bluetooth = new Bluetooth();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +58,8 @@ public class Home extends AppCompatActivity {
         /**** VERIFICA SE O DISPOSITIVO SUPORTA BLUETOOTH ****/
         verificaBluetooh = "";
 
-        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (btAdapter == null) {
+
+        if (bluetooth.verificaSeSuportaBluetooth() == false) {
             verificaBluetooh = "Que pena! seu Hardware Bluetooth não está funcionando.";
             return;
         } else {
@@ -67,11 +69,10 @@ public class Home extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), toSpeakValidatebt, Toast.LENGTH_SHORT).show();
         roboSintetizador.speak(toSpeakValidatebt, TextToSpeech.QUEUE_FLUSH, null);
 
+
         /*** CASO O BLUETOOTH NÃO ESTEJA ATIVO SOLICITA SUA ATIVAÇÃO ***/
-
-
         verificaSeBluetoothEstaAtivo = "";
-        if (!btAdapter.isEnabled()) {
+        if (!bluetooth.VerificaSeOBluetoothEstaAtivo()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, ENABLE_BLUETOOTH);
             verificaSeBluetoothEstaAtivo = "Solicitando ativação do Bluetooth";
@@ -85,11 +86,8 @@ public class Home extends AppCompatActivity {
         roboSintetizador.speak(toSpeakValidateBluetoothAtivo, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    /*** VERIFICA SE O USUÁRIO ATIVOU O BLUETOOTH CONFORME SOLICITAÇÃO ***/
 
-    /***
-     * VERIFICA SE O USUÁRIO ATIVOU O BLUETOOTH CONFORME SOLICITAÇÃO
-     *****/
+     /**** VERIFICA SE O USUÁRIO ATIVOU O BLUETOOTH CONFORME SOLICITAÇÃO *****/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         verificaSeBluetoothEstaAtivo = "";
@@ -101,7 +99,7 @@ public class Home extends AppCompatActivity {
                 verificaSeBluetoothEstaAtivo = "Bluetooth não ativado!";
             }
         }
-        /*asdsaasdas*/
+
 
 
         botaoEnviar.setOnClickListener(new View.OnClickListener() {
