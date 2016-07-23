@@ -44,8 +44,6 @@ public class Home extends AppCompatActivity {
                 }
             }
         });
-/*Alterado para commitar   asdas */
-
         /*** REPRODUZ MENSAGEM DE BOAS VINDAS ***/
         msgSaudacao = "";
         msgSaudacao = "Olá, eu sou SmartGuia seu assistente";
