@@ -101,7 +101,7 @@ public class Home extends AppCompatActivity {
                 verificaSeBluetoothEstaAtivo = "Bluetooth não ativado!";
             }
         }
-        /*asdsa*/
+        /*asdsaasdas*/
 
 
         botaoEnviar.setOnClickListener(new View.OnClickListener() {
