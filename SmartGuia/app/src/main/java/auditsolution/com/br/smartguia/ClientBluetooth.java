@@ -224,7 +224,7 @@ public class ClientBluetooth extends Activity {
             }
         }
     }
-    /**/
+
 
     @Override
     protected void onPause() {

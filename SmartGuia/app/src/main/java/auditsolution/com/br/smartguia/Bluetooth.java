@@ -19,7 +19,7 @@ public class Bluetooth {
         }
     }
 
-    /****
+    /***
      * CASO O BLUETOOTH NÃO ESTEJA ATIVO SOLICITA SUA ATIVAÇÃO
      ***/
     public boolean VerificaSeOBluetoothEstaAtivo() {

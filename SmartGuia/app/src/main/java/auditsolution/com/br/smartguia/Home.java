@@ -1,20 +1,20 @@
 package auditsolution.com.br.smartguia;
 
 import android.bluetooth.BluetoothAdapter;
+
+import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
+
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import auditsolution.com.br.smartguia.Bluetooth;
+
+import auditsolution.com.br.smartguia.dataBase.CriaBanco;
 
 
 import java.util.Locale;
@@ -23,16 +23,20 @@ public class Home extends AppCompatActivity {
     public static int ENABLE_BLUETOOTH = 1;
     public static int SELECT_PAIRED_DEVICE = 2;
     public static int SELECT_DISCOVERED_DEVICE = 3;
+    private final Context contexto = null;
+
 
     static TextView statusMessage;
     TextToSpeech roboSintetizador;
     EditText lb_text;
     Button botaoEnviar;
     String msgSaudacao, verificaBluetooh, verificaSeBluetoothEstaAtivo;
-    Bluetooth  bluetooth = new Bluetooth();
+    Bluetooth bluetooth = new Bluetooth();
 
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lb_text = (EditText) findViewById(R.id.editText);
@@ -42,7 +46,7 @@ public class Home extends AppCompatActivity {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
-                    roboSintetizador.setLanguage(Locale.getDefault());
+                    roboSintetizador.setLanguage(Locale.UK);
                 }
             }
         });
@@ -76,6 +80,7 @@ public class Home extends AppCompatActivity {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, ENABLE_BLUETOOTH);
             verificaSeBluetoothEstaAtivo = "Solicitando ativação do Bluetooth";
+
         } else {
             verificaSeBluetoothEstaAtivo = "Bluetooth já ativado!";
             statusMessage.setText("Olá eu sou seu Guia, Ative minhas funções para que eu possa lhe ajudar!");
@@ -87,7 +92,9 @@ public class Home extends AppCompatActivity {
     }
 
 
-     /**** VERIFICA SE O USUÁRIO ATIVOU O BLUETOOTH CONFORME SOLICITAÇÃO *****/
+    /****
+     * VERIFICA SE O USUÁRIO ATIVOU O BLUETOOTH CONFORME SOLICITAÇÃO
+     *****/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         verificaSeBluetoothEstaAtivo = "";
@@ -99,8 +106,6 @@ public class Home extends AppCompatActivity {
                 verificaSeBluetoothEstaAtivo = "Bluetooth não ativado!";
             }
         }
-
-
 
         botaoEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
