@@ -1,4 +1,4 @@
-package auditsolution.com.br.smartguia;
+package auditsolution.com.br.smartguiabluetooth;
 
 import org.junit.Test;
 

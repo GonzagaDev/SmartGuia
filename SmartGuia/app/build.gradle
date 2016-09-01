@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "auditsolution.com.br.smartguia"
+        applicationId "auditsolution.com.br.smartguiabluetooth"
         minSdkVersion 8
         targetSdkVersion 23
         versionCode 1
