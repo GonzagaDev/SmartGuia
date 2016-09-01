@@ -282,7 +282,6 @@ public class MainBluetoothActivity extends ActionBarActivity {
     /**
      * METODO PARA MEDIR A POTÊNCIA DO SINAL
      * FONTE: http://abreai.net/4BFdC
-     *
      */
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
