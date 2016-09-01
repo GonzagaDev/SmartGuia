@@ -12,7 +12,7 @@ import auditsolution.com.br.smartguiabluetooth.model.Usuario;
 
 
 /**
- *
+ *alterado
  */
 public class UsuarioDAO {
     private DatabaseHelperExample databaseHelperExample;
