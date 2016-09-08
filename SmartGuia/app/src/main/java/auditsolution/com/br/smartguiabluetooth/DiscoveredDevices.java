@@ -99,7 +99,7 @@ public class DiscoveredDevices extends ListActivity {
 
         /*  Este método é executado sempre que um novo dispositivo for descoberto.
          */
-
+        @Override
         public void onReceive(Context context, Intent intent) {
 
             /*  Obtem o Intent que gerou a ação.
@@ -107,6 +107,7 @@ public class DiscoveredDevices extends ListActivity {
                 Obtem um objeto que representa o dispositivo Bluetooth descoberto.Exibe seu nome e endereço na lista.
              */
             String action = intent.getAction();
+
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);

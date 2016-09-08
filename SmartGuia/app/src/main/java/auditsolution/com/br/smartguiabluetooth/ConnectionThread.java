@@ -29,8 +29,11 @@ public class ConnectionThread extends Thread {
     boolean server;
     boolean running = false;
 
-    /*  Este construtor prepara o dispositivo para atuar como servidor.
+    /**
+     * Este construtor prepara o dispositivo para atuar como servidor.
      */
+
+
     public ConnectionThread() {
 
         this.server = true;
