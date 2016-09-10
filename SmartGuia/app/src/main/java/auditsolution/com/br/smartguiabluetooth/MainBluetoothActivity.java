@@ -46,7 +46,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
     static MenuItem menuTest;
 
     ConnectionThread connect;
-    DaoTransmissor dao = new DaoTransmissor(getBaseContext());
+    DaoTransmissor dao = new DaoTransmissor(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

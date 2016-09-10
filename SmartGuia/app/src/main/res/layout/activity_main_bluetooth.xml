@@ -21,7 +21,8 @@
         android:layout_alignEnd="@+id/bt_consultar"
         android:layout_alignParentTop="true"
         android:singleLine="false"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="#070707" />
 
     <Button
         android:id="@+id/button_PairedDevices"
