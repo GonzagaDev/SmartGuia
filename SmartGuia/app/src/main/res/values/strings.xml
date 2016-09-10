@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Smart Guia</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Modo Test</string>
+    <string name="action_test">Modo Teste</string>
+    <string name="action_user">Modo Usuáro</string>
     <string name="title_activity_paired_devices">paired_devices</string>
 
 </resources>

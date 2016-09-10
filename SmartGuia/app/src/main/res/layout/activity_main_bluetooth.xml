@@ -8,7 +8,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
 
-    tools:context="auditsolution.com.br.smartguiabluetooth.MainBluetoothActivity">
+    tools:context="auditsolution.com.br.smartguiabluetooth.MainBluetoothActivity"
+    android:background="#fefefe">
 
     <TextView
         android:id="@+id/statusMessage"
@@ -16,9 +17,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/bt_consultar"
+        android:layout_alignEnd="@+id/bt_consultar"
         android:layout_alignParentTop="true"
-        android:text=""
-        />
+        android:singleLine="false"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/button_PairedDevices"
@@ -125,7 +128,8 @@
         android:onClick="bt_Buscar"
         android:layout_above="@+id/button_Send"
         android:layout_alignRight="@+id/button_Send"
-        android:layout_alignEnd="@+id/button_Send" />
+        android:layout_alignEnd="@+id/button_Send"
+        android:enabled="true" />
 
 </RelativeLayout>
 

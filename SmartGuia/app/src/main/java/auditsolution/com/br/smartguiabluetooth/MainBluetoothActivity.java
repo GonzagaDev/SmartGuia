@@ -39,6 +39,11 @@ public class MainBluetoothActivity extends ActionBarActivity {
     static TextView messageBox;
     static Button btSend;
     static Button bt_clear;
+    static Button bt_buscar;
+    static Button bt_wait;
+    static Button bt_ficarVisivel;
+    static MenuItem menuUser;
+    static MenuItem menuTest;
 
     ConnectionThread connect;
     DaoTransmissor dao = new DaoTransmissor(getBaseContext());
@@ -54,6 +59,11 @@ public class MainBluetoothActivity extends ActionBarActivity {
         btSend = (Button) findViewById(R.id.button_Send);
         bt_clear = (Button) findViewById(R.id.bt_clear);
         messageBox = (TextView) findViewById(R.id.editText_MessageBox);
+        bt_buscar = (Button) findViewById(R.id.bt_consultar);
+        bt_wait = (Button) findViewById(R.id.button_WaitConnection);
+        bt_ficarVisivel = (Button) findViewById(R.id.button_Visibility);
+        menuUser = (MenuItem) findViewById(R.id.action_user);
+        menuTest = (MenuItem) findViewById(R.id.action_test);
 
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         if (btAdapter == null) {
@@ -76,12 +86,45 @@ public class MainBluetoothActivity extends ActionBarActivity {
                 statusMessage.setText("Bluetooth já ativado :)");
             }
         }
+        invisibleBotoes();
+    }
+
+    /**
+     * MÉTODO QUE DEIXA OS COMPONENTES INVISIVEIS
+     */
+
+    public static void invisibleBotoes() {
+        btSend.setVisibility(View.INVISIBLE);
+        bt_clear.setVisibility(View.INVISIBLE);
+        bt_buscar.setVisibility(View.INVISIBLE);
+        bt_wait.setVisibility(View.INVISIBLE);
+        bt_ficarVisivel.setVisibility(View.INVISIBLE);
+        statusMessage.setVisibility(View.INVISIBLE);
+        textSpace.setVisibility(View.VISIBLE);
+        messageBox.setVisibility(View.INVISIBLE);
+
+    }
+
+    /**
+     * MÉTODO QUE DEIXA OS COMPONENTES VISIVEIS
+     */
+
+    public static void visibleBotoes() {
+        btSend.setVisibility(View.VISIBLE);
+        bt_clear.setVisibility(View.VISIBLE);
+        bt_buscar.setVisibility(View.VISIBLE);
+        bt_wait.setVisibility(View.VISIBLE);
+        bt_ficarVisivel.setVisibility(View.VISIBLE);
+        statusMessage.setVisibility(View.VISIBLE);
+        textSpace.setVisibility(View.VISIBLE);
+        messageBox.setVisibility(View.VISIBLE);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_bluetooth, menu);
+
         return true;
     }
 
@@ -92,10 +135,18 @@ public class MainBluetoothActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_test) {
             //AÇÃO AO CLICAR NO MENU
             Toast.makeText(getApplicationContext(), "Modo teste Ativado!", Toast.LENGTH_LONG).show();
+            visibleBotoes();
+
             // HABILITA BOTOES
+
+            return true;
+        }
+        if (id == R.id.action_user) {
+            Toast.makeText(getApplicationContext(), "Modo Usuário Ativado!", Toast.LENGTH_LONG).show();
+            invisibleBotoes();
             return true;
         }
         return super.onOptionsItemSelected(item);
