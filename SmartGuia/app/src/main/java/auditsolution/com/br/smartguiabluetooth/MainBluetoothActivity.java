@@ -93,6 +93,9 @@ public class MainBluetoothActivity extends ActionBarActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //AÇÃO AO CLICAR NO MENU
+            Toast.makeText(getApplicationContext(), "Modo teste Ativado!", Toast.LENGTH_LONG).show();
+            // HABILITA BOTOES
             return true;
         }
         return super.onOptionsItemSelected(item);
