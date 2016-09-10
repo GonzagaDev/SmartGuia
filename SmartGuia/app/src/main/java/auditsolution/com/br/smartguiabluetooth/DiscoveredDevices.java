@@ -8,20 +8,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 public class DiscoveredDevices extends ListActivity {
+
+    public static interface BluetoothListener {
+
+        public static final String ACTION_DISCOVERY_STARTED = BluetoothAdapter.ACTION_DISCOVERY_STARTED;
+        public static final String ACTION_FOUND = BluetoothDevice.ACTION_FOUND;
+        public static final String ACTION_DISCOVERY_FINISHED = BluetoothAdapter.ACTION_DISCOVERY_FINISHED;
+
+        public void action(String action);
+    }
 
 
     /*  Um adaptador para conter os elementos da lista de dispositivos descobertos.
@@ -51,14 +56,20 @@ public class DiscoveredDevices extends ListActivity {
         /*  Usa o adaptador Bluetooth padrão para iniciar o processo de descoberta.
          */
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-        btAdapter.startDiscovery();
+
 
         /*  Cria um filtro que captura o momento em que um dispositivo é descoberto.
             Registra o filtro e define um receptor para o evento de descoberta.
          */
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(receiver, filter);
+        IntentFilter filter2 = new IntentFilter(BluetoothListener.ACTION_DISCOVERY_STARTED);
+        IntentFilter filter3 = new IntentFilter(BluetoothListener.ACTION_DISCOVERY_FINISHED);
 
+        registerReceiver(receiver, filter);
+        registerReceiver(receiver, filter2);
+        registerReceiver(receiver, filter2);
+
+        btAdapter.startDiscovery();
 
     }
 
@@ -86,45 +97,26 @@ public class DiscoveredDevices extends ListActivity {
         finish();
     }
 
-
     /*  Define um receptor para o evento de descoberta de dispositivo.
      */
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
 
-
-        private Bluetooth.BluetoothListener listener;
-        private ArrayList lista;
-        private BluetoothAdapter dispositivo;
-
-
         /*  Este método é executado sempre que um novo dispositivo for descoberto.
          */
-        @Override
         public void onReceive(Context context, Intent intent) {
 
             /*  Obtem o Intent que gerou a ação.
                 Verifica se a ação corresponde à descoberta de um novo dispositivo.
-                Obtem um objeto que representa o dispositivo Bluetooth descoberto.Exibe seu nome e endereço na lista.
+                Obtem um objeto que representa o dispositivo Bluetooth descoberto.
+                Exibe seu nome e endereço na lista.
              */
             String action = intent.getAction();
-
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
-                arrayAdapter.add(device.getName() + "\n" + device.getAddress() + "\n" + " RSSI: " + rssi + "dBm");
-
-                /*tentar medir pontencia
-                int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
-                Toast.makeText(getApplicationContext(), " RSSI: " + rssi + "dBm", Toast.LENGTH_SHORT).show()*/
+                arrayAdapter.add(device.getName() + "\n" + device.getAddress());
             }
-
-
         }
-
-
     };
-
-
 
     /*  Executado quando a Activity é finalizada.
      */
@@ -159,6 +151,4 @@ public class DiscoveredDevices extends ListActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 }

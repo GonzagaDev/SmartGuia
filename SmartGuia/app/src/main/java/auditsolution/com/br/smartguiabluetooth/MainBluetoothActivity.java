@@ -61,9 +61,17 @@ public class MainBluetoothActivity extends ActionBarActivity {
         } else {
             statusMessage.setText("Ótimo! Hardware Bluetooth está funcionando :)");
             if (!btAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, ENABLE_BLUETOOTH);
-                statusMessage.setText("Solicitando ativação do Bluetooth...");
+                /**
+                 * SOLICITA QUE O BLUETOOTH SEJA HABILITADO
+                 * Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                 startActivityForResult(enableBtIntent, ENABLE_BLUETOOTH);
+                 statusMessage.setText("Solicitando ativação do Bluetooth...");
+                 */
+
+                /**
+                 * ATIVA O BLUETOOTH AUTOMATICAMENTE
+                 */
+                btAdapter.enable();
             } else {
                 statusMessage.setText("Bluetooth já ativado :)");
             }
@@ -117,10 +125,12 @@ public class MainBluetoothActivity extends ActionBarActivity {
         Intent searchPairedDevicesIntent = new Intent(this, PairedDevices.class);
         startActivityForResult(searchPairedDevicesIntent, SELECT_PAIRED_DEVICE);
 
+
     }
 
 
     public void discoverDevices(View view) {
+
         Intent searchPairedDevicesIntent = new Intent(this, DiscoveredDevices.class);
         startActivityForResult(searchPairedDevicesIntent, SELECT_DISCOVERED_DEVICE);
     }
@@ -279,6 +289,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
         }
 
     }
+
     /**
      * METODO PARA MEDIR A POTÊNCIA DO SINAL
      * FONTE: http://abreai.net/4BFdC
