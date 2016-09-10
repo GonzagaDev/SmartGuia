@@ -1,14 +1,17 @@
 package auditsolution.com.br.smartguiabluetooth;
 
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -328,19 +331,58 @@ public class MainBluetoothActivity extends ActionBarActivity {
         textSpace.setText("");
     }
 
-    public void bt_Buscar(View view) {
-        Transmissor retorno = null;
-        try {
-            retorno = dao.buscarTransmissorPorId(1);
-        } catch (Exception e) {
-            Log.e("ERRO:", "Ocorreu um erro ao consutar no base de dados:" + e.getMessage());
-        }
+    String m_Text = "";
 
-        if (retorno == null) {
-            Log.i("RETORNO BANCO DE DADOS", "Atenção! registro não localizado");
-        } else {
-            textSpace.setText("O dispositivo encontrado no banco foi: " + retorno.getDevName());
-        }
+    public void bt_Buscar(View view) {
+        /**
+         * CRIA E CHAMA O MODAL DE IMPUT
+         */
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Informe o ID da busca");
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_Text = input.getText().toString();
+
+                int filtroSql = 0;
+                try {
+                    filtroSql = Integer.parseInt(m_Text);
+                } catch (Exception e) {
+                    filtroSql = 0;
+                }
+
+                /**
+                 * EFETUA A BUSCA CONFORME O RETORNO DO MODAL   */
+                Transmissor retorno = null;
+
+                try {
+                    retorno = dao.buscarTransmissorPorId(filtroSql);
+                } catch (Exception e) {
+                    textSpace.setText("RETORNO BANCO DE DADOS: Ocorreu um erro ao consutar no base de dados");
+                    Log.e("ERRO: ", "Ocorreu um erro ao consutar no base de dados:" + e.getMessage());
+                }
+
+                if (retorno == null) {
+                    textSpace.setText("RETORNO BANCO DE DADOS: Atenção! registro não localizado");
+                    Log.i("RETORNO BANCO DE DADOS", "Atenção! registro não localizado");
+                } else {
+                    textSpace.setText("Você esta conectado com o semaforo: " + retorno.getDevName() + " localizado na " + "\n" + retorno.getRua()
+                            + "\n" + retorno.getComplemento()
+                            + "\n" + retorno.getCruzamento());
+                }
+            }
+        })
+        ;
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
 
     }
 
