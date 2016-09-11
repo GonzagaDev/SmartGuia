@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
 
 
-        <activity android:name=".MainBluetoothActivity">
+        <activity android:name=".MainBluetoothActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,11 +24,13 @@
         <activity
             android:name=".PairedDevices"
             android:label="Paired Devices"
-            android:parentActivityName=".MainBluetoothActivity"></activity>
+            android:parentActivityName=".MainBluetoothActivity"
+            ></activity>
         <activity
             android:name=".DiscoveredDevices"
             android:label="Discovered Devices"
-            android:parentActivityName=".MainBluetoothActivity"></activity>
+            android:parentActivityName=".MainBluetoothActivity"
+            ></activity>
 
     </application>
 </manifest>
