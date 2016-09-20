@@ -1,6 +1,7 @@
 package auditsolution.com.br.smartguiabluetooth;
 
 import android.app.AlertDialog;
+import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -51,6 +52,8 @@ public class MainBluetoothActivity extends ActionBarActivity {
     ConnectionThread connect;
     DaoTransmissor dao = new DaoTransmissor(this);
 
+    private String MSG_DB_0001 = "RETORNO BANCO DE DADOS: ";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +87,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
                 /**
                  * ATIVA O BLUETOOTH AUTOMATICAMENTE
                  */
+                Toast.makeText(getApplicationContext(), "Ativando Bluetooth", Toast.LENGTH_LONG).show();
                 btAdapter.enable();
             } else {
                 statusMessage.setText("Bluetooth já ativado :)");
@@ -185,7 +189,6 @@ public class MainBluetoothActivity extends ActionBarActivity {
 
     }
 
-
     public void discoverDevices(View view) {
 
         Intent searchPairedDevicesIntent = new Intent(this, DiscoveredDevices.class);
@@ -221,10 +224,45 @@ public class MainBluetoothActivity extends ActionBarActivity {
         messageBox.setEnabled(true);
     }
 
+    public  void consultarDb(String stringId) {
+
+
+        int filtroSql = 0;
+        try {
+            filtroSql = Integer.parseInt(stringId);
+        } catch (Exception e) {
+            filtroSql = 0;
+        }
+
+        /**
+         * EFETUA A BUSCA CONFORME O RETORNO DO MODAL   */
+        Transmissor retorno = null;
+
+        try {
+            retorno = dao.buscarTransmissorPorId(filtroSql);
+        } catch (Exception e) {
+            textSpace.setText(MSG_DB_0001 + " Ocorreu um erro ao consutar no base de dados");
+            Log.e(MSG_DB_0001, "Ocorreu um erro ao consutar no base de dados:" + e.getMessage());
+        }
+
+        if (retorno == null) {
+            textSpace.setText(MSG_DB_0001 + " Atenção! registro não localizado");
+            Log.i(MSG_DB_0001, "Atenção! registro não localizado");
+        } else {
+            textSpace.setText("Você esta conectado com o semaforo: " + retorno.getDevName() + " localizado na " + "\n" + retorno.getRua()
+                    + "\n" + retorno.getComplemento()
+                    + "\n" + retorno.getCruzamento());
+        }
+    }
+
+
+
 
     public static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+
+
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
             Date hora = Calendar.getInstance().getTime(); // Ou qualquer outra forma que tem
@@ -298,6 +336,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
                         /** IDENTIFICA O ARDUINDO COM BASE NO ID RECEBIDO **/
                         if (arrayDeDados[0].equals("1")) {
                             textSpace.append("Dados Recebidos do arduino nº: " + arrayDeDados[0] + "\n");
+                            
                         } else {
                             textSpace.append("Arduino  não encontrado" + "\n");
                         }
@@ -333,6 +372,8 @@ public class MainBluetoothActivity extends ActionBarActivity {
 
     String m_Text = "";
 
+
+
     public void bt_Buscar(View view) {
         /**
          * CRIA E CHAMA O MODAL DE IMPUT
@@ -361,13 +402,13 @@ public class MainBluetoothActivity extends ActionBarActivity {
                 try {
                     retorno = dao.buscarTransmissorPorId(filtroSql);
                 } catch (Exception e) {
-                    textSpace.setText("RETORNO BANCO DE DADOS: Ocorreu um erro ao consutar no base de dados");
-                    Log.e("ERRO: ", "Ocorreu um erro ao consutar no base de dados:" + e.getMessage());
+                    textSpace.setText(MSG_DB_0001 + " Ocorreu um erro ao consutar no base de dados");
+                    Log.e(MSG_DB_0001, "Ocorreu um erro ao consutar no base de dados:" + e.getMessage());
                 }
 
                 if (retorno == null) {
-                    textSpace.setText("RETORNO BANCO DE DADOS: Atenção! registro não localizado");
-                    Log.i("RETORNO BANCO DE DADOS", "Atenção! registro não localizado");
+                    textSpace.setText(MSG_DB_0001 + " Atenção! registro não localizado");
+                    Log.i(MSG_DB_0001, "Atenção! registro não localizado");
                 } else {
                     textSpace.setText("Você esta conectado com o semaforo: " + retorno.getDevName() + " localizado na " + "\n" + retorno.getRua()
                             + "\n" + retorno.getComplemento()
