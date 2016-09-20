@@ -8,7 +8,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
 
-    tools:context="auditsolution.com.br.smartguiabluetooth.MainBluetoothActivity">
+    tools:context="auditsolution.com.br.smartguiabluetooth.MainBluetoothActivity"
+    android:background="@drawable/fundo01">
 
     <TextView
         android:id="@+id/statusMessage"
@@ -17,8 +18,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text=""
-        android:theme="@android:style/Theme.Material.Wallpaper.NoTitleBar" />
+        android:text="Status Comunicação"
+        android:theme="@android:style/Theme.Material.Wallpaper.NoTitleBar"
+        android:autoText="false" />
 
     <Button
         android:id="@+id/button_PairedDevices"
@@ -35,23 +37,23 @@
         android:id="@+id/button_DiscoveredDevices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/button_PairedDevices"
-        android:layout_marginLeft="5dp"
-        android:layout_toEndOf="@+id/button_PairedDevices"
-        android:layout_toRightOf="@+id/button_PairedDevices"
         android:onClick="discoverDevices"
-        android:text="Iniciar descoberta\n de dispositivos" />
+        android:text="Iniciar descoberta\n de dispositivos"
+        android:layout_alignTop="@+id/button_PairedDevices"
+        android:layout_alignRight="@+id/bt_consultar"
+        android:layout_alignEnd="@+id/bt_consultar"
+        android:layout_alignLeft="@+id/button_WaitConnection"
+        android:layout_alignStart="@+id/button_WaitConnection" />
 
     <Button
         android:id="@+id/button_WaitConnection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/button_Visibility"
-        android:layout_marginLeft="5dp"
-        android:layout_toEndOf="@+id/button_Visibility"
-        android:layout_toRightOf="@+id/button_Visibility"
         android:onClick="waitConnection"
-        android:text="Esperar\nconexão" />
+        android:text="Esperar\nconexão"
+        android:layout_alignTop="@+id/button_Visibility"
+        android:layout_toLeftOf="@+id/bt_clear"
+        android:layout_toStartOf="@+id/bt_clear" />
 
     <Button
         android:id="@+id/button_Visibility"
@@ -61,7 +63,9 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/button_PairedDevices"
         android:onClick="enableVisibility"
-        android:text="Habilitar\nVisibilidade" />
+        android:text="Habilitar\nVisibilidade"
+        android:layout_alignRight="@+id/button_PairedDevices"
+        android:layout_alignEnd="@+id/button_PairedDevices" />
 
     <EditText
         android:id="@+id/editText_MessageBox"
@@ -90,10 +94,11 @@
         android:id="@+id/ScrollView01"
         android:layout_width="wrap_content"
         android:layout_height="150dip"
-        android:layout_toRightOf="@+id/statusMessage"
         android:layout_alignRight="@+id/button_Send"
         android:layout_alignEnd="@+id/button_Send"
-        android:layout_below="@+id/button_WaitConnection">
+        android:layout_below="@+id/button_WaitConnection"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
     </ScrollView>
 
@@ -103,9 +108,12 @@
         android:layout_height="wrap_content"
         android:text=""
         android:layout_below="@+id/button_Visibility"
-        android:layout_toRightOf="@+id/statusMessage"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/ScrollView01"
+        android:textColor="#fffefe" />
 
     <Button
         android:layout_width="wrap_content"
@@ -115,7 +123,8 @@
         android:layout_alignBottom="@+id/button_WaitConnection"
         android:layout_alignRight="@+id/ScrollView01"
         android:layout_alignEnd="@+id/ScrollView01"
-        android:onClick="Bt_clear" />
+        android:onClick="Bt_clear"
+        android:layout_below="@+id/button_DiscoveredDevices" />
 
     <Button
         android:layout_width="wrap_content"
@@ -125,7 +134,9 @@
         android:onClick="bt_Buscar"
         android:layout_above="@+id/button_Send"
         android:layout_alignRight="@+id/button_Send"
-        android:layout_alignEnd="@+id/button_Send" />
+        android:layout_alignEnd="@+id/button_Send"
+        android:layout_alignLeft="@+id/bt_clear"
+        android:layout_alignStart="@+id/bt_clear" />
 
 </RelativeLayout>
 
