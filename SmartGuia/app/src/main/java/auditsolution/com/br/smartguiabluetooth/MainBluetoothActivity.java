@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -27,6 +28,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import auditsolution.com.br.smartguiabluetooth.dao.DaoTransmissor;
 import auditsolution.com.br.smartguiabluetooth.model.Transmissor;
@@ -49,6 +51,9 @@ public class MainBluetoothActivity extends ActionBarActivity {
     static MenuItem menuUser;
     static MenuItem menuTest;
 
+
+    TextToSpeech roboSintetizador;
+
     ConnectionThread connect;
     DaoTransmissor dao = new DaoTransmissor(this);
 
@@ -68,32 +73,66 @@ public class MainBluetoothActivity extends ActionBarActivity {
         bt_buscar = (Button) findViewById(R.id.bt_consultar);
         bt_wait = (Button) findViewById(R.id.button_WaitConnection);
         bt_ficarVisivel = (Button) findViewById(R.id.button_Visibility);
+        bt_ficarVisivel = (Button) findViewById(R.id.button_Visibility);
         menuUser = (MenuItem) findViewById(R.id.action_user);
         menuTest = (MenuItem) findViewById(R.id.action_test);
 
-        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (btAdapter == null) {
-            statusMessage.setText("Que pena! Hardware Bluetooth não está funcionando :(");
-        } else {
-            statusMessage.setText("Ótimo! Hardware Bluetooth está funcionando :)");
-            if (!btAdapter.isEnabled()) {
-                /**
-                 * SOLICITA QUE O BLUETOOTH SEJA HABILITADO
-                 * Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                 startActivityForResult(enableBtIntent, ENABLE_BLUETOOTH);
-                 statusMessage.setText("Solicitando ativação do Bluetooth...");
-                 */
+        // CHAMA SINTETIZADOR
+        sintezar("Iniciando Smart Guia");
 
+        BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
+        String msgAdapter = "";
+        if (btAdapter == null) {
+            msgAdapter = "Que pena! Hardware Bluetooth não está funcionando :(";
+            statusMessage.setText(msgAdapter);
+
+        } else {
+            msgAdapter = "Ótimo! Hardware Bluetooth está funcionando :)";
+            statusMessage.setText(msgAdapter);
+            if (!btAdapter.isEnabled()) {
+                msgAdapter = "Ativando Bluetooth";
                 /**
                  * ATIVA O BLUETOOTH AUTOMATICAMENTE
                  */
-                Toast.makeText(getApplicationContext(), "Ativando Bluetooth", Toast.LENGTH_LONG).show();
+
                 btAdapter.enable();
             } else {
-                statusMessage.setText("Bluetooth já ativado :)");
+                msgAdapter = "Bluetooth já ativado :)";
+                statusMessage.setText(msgAdapter);
             }
         }
+
+
         invisibleBotoes();
+    }
+
+    /**
+     * METODO QUE SINTETIZA A STRING
+     */
+    public void sintezar(final String texto) {
+        roboSintetizador = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = roboSintetizador.setLanguage(Locale.getDefault());
+                    if (result == TextToSpeech.LANG_MISSING_DATA
+                            || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "Este idioma não é Suportado");
+                    } else {
+                        //  speakOut();
+                        roboSintetizador.speak(texto, TextToSpeech.QUEUE_ADD, null);
+                    }
+                } else {
+                    Log.e("TTS", "A inicialização Falhou!");
+                }
+            }
+
+            public void speakOut() {
+                //   String text = txtText.getText().toString();
+                roboSintetizador.speak("teste", TextToSpeech.QUEUE_ADD, null);
+
+            }
+        });
     }
 
     /**
@@ -142,9 +181,11 @@ public class MainBluetoothActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
+        String msgMenu = "";
         if (id == R.id.action_test) {
             //AÇÃO AO CLICAR NO MENU
-            Toast.makeText(getApplicationContext(), "Modo teste Ativado!", Toast.LENGTH_LONG).show();
+            msgMenu = "Modo teste Ativado!";
+            Toast.makeText(getApplicationContext(), msgMenu, Toast.LENGTH_LONG).show();
             visibleBotoes();
 
             // HABILITA BOTOES
@@ -152,16 +193,17 @@ public class MainBluetoothActivity extends ActionBarActivity {
             return true;
         }
         if (id == R.id.action_user) {
-            Toast.makeText(getApplicationContext(), "Modo Usuário Ativado!", Toast.LENGTH_LONG).show();
+            msgMenu = "Modo Usuário Ativado!";
+            Toast.makeText(getApplicationContext(), msgMenu, Toast.LENGTH_LONG).show();
             invisibleBotoes();
             return true;
         }
+        sintezar(msgMenu);
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == ENABLE_BLUETOOTH) {
             if (resultCode == RESULT_OK) {
                 statusMessage.setText("Bluetooth ativado :D");
@@ -170,8 +212,10 @@ public class MainBluetoothActivity extends ActionBarActivity {
             }
         } else if (requestCode == SELECT_PAIRED_DEVICE || requestCode == SELECT_DISCOVERED_DEVICE) {
             if (resultCode == RESULT_OK) {
-                statusMessage.setText("Você selecionou " + data.getStringExtra("btDevName") + "\n"
-                        + data.getStringExtra("btDevAddress"));
+               /* statusMessage.setText("Você selecionou " + data.getStringExtra("btDevName") + "\n"
+                        + data.getStringExtra("btDevAddress"));*/
+
+                statusMessage.setText("Você selecionou " + data.getStringExtra("btDevName"));
 
                 connect = new ConnectionThread(data.getStringExtra("btDevAddress"));
                 connect.start();
@@ -179,6 +223,8 @@ public class MainBluetoothActivity extends ActionBarActivity {
                 statusMessage.setText("Nenhum dispositivo selecionado :(");
             }
         }
+        sintezar(statusMessage.getText() + "");
+
     }
 
 
@@ -224,7 +270,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
         messageBox.setEnabled(true);
     }
 
-    public  void consultarDb(String stringId) {
+    public void consultarDb(String stringId) {
 
 
         int filtroSql = 0;
@@ -256,12 +302,9 @@ public class MainBluetoothActivity extends ActionBarActivity {
     }
 
 
-
-
     public static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-
 
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -336,7 +379,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
                         /** IDENTIFICA O ARDUINDO COM BASE NO ID RECEBIDO **/
                         if (arrayDeDados[0].equals("1")) {
                             textSpace.append("Dados Recebidos do arduino nº: " + arrayDeDados[0] + "\n");
-                            
+
                         } else {
                             textSpace.append("Arduino  não encontrado" + "\n");
                         }
@@ -362,16 +405,18 @@ public class MainBluetoothActivity extends ActionBarActivity {
 
 
             }
+
+
         }
 
     };
+
 
     public void Bt_clear(View view) {
         textSpace.setText("");
     }
 
     String m_Text = "";
-
 
 
     public void bt_Buscar(View view) {
