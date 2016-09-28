@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String BANCO_DADOS = "smartDB";
-    private static final int VERSAO = 1;
+    private static final int VERSAO = 2;
 
     public DatabaseHelper(Context context) {
         super(context, BANCO_DADOS, null, VERSAO);
@@ -30,6 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //CRIA O REGISTRO DO ARDUÍNO Nº1
         db.execSQL("insert into transmissor(serial, rua, cruzamento, complemento, devName, devAddress) values (1, 'Rua Gonçalves Ledo','Semáforo 1'," +
                 "'Cruzamento com Avenida Centenário','HC-05','20:16:04:18:29:29')");
+
 
     }
 

@@ -1,11 +1,13 @@
 package auditsolution.com.br.smartguiabluetooth;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
@@ -55,7 +57,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
     TextToSpeech roboSintetizador;
 
     ConnectionThread connect;
-    DaoTransmissor dao = new DaoTransmissor(this);
+    DaoTransmissor dao = new DaoTransmissor(App.context);
 
     private String MSG_DB_0001 = "RETORNO BANCO DE DADOS: ";
 
@@ -78,7 +80,8 @@ public class MainBluetoothActivity extends ActionBarActivity {
         menuTest = (MenuItem) findViewById(R.id.action_test);
 
         // CHAMA SINTETIZADOR
-        sintezar("Iniciando Smart Guia");
+        String msgInicio = "Smart Guia Iniciado!";
+
 
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         String msgAdapter = "";
@@ -89,6 +92,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
         } else {
             msgAdapter = "Ótimo! Hardware Bluetooth está funcionando :)";
             statusMessage.setText(msgAdapter);
+
             if (!btAdapter.isEnabled()) {
                 msgAdapter = "Ativando Bluetooth";
                 /**
@@ -96,21 +100,32 @@ public class MainBluetoothActivity extends ActionBarActivity {
                  */
 
                 btAdapter.enable();
+
             } else {
                 msgAdapter = "Bluetooth já ativado :)";
                 statusMessage.setText(msgAdapter);
+
             }
         }
-
+        sintezar(msgInicio + msgAdapter);
 
         invisibleBotoes();
     }
 
+
     /**
      * METODO QUE SINTETIZA A STRING
      */
+
+
     public void sintezar(final String texto) {
-        roboSintetizador = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+        //roboSintetizador = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+
+        /**
+         *  CHAMAR METODO APP.context PARA OBTER O CONTEXTO DA APLICAÇÃO
+         */
+
+        roboSintetizador = new TextToSpeech(App.context, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
@@ -127,9 +142,9 @@ public class MainBluetoothActivity extends ActionBarActivity {
                 }
             }
 
-            public void speakOut() {
+            public void speakOut(String msg) {
                 //   String text = txtText.getText().toString();
-                roboSintetizador.speak("teste", TextToSpeech.QUEUE_ADD, null);
+                roboSintetizador.speak(msg, TextToSpeech.QUEUE_ADD, null);
 
             }
         });
@@ -187,6 +202,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
             msgMenu = "Modo teste Ativado!";
             Toast.makeText(getApplicationContext(), msgMenu, Toast.LENGTH_LONG).show();
             visibleBotoes();
+            messageBox.setText("1;1;10000.");
 
             // HABILITA BOTOES
 
@@ -196,6 +212,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
             msgMenu = "Modo Usuário Ativado!";
             Toast.makeText(getApplicationContext(), msgMenu, Toast.LENGTH_LONG).show();
             invisibleBotoes();
+            messageBox.setText("");
             return true;
         }
         sintezar(msgMenu);
@@ -206,7 +223,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ENABLE_BLUETOOTH) {
             if (resultCode == RESULT_OK) {
-                statusMessage.setText("Bluetooth ativado :D");
+                statusMessage.setText("Bluetooth ativado!");
             } else {
                 statusMessage.setText("Bluetooth não ativado :(");
             }
@@ -270,12 +287,19 @@ public class MainBluetoothActivity extends ActionBarActivity {
         messageBox.setEnabled(true);
     }
 
-    public void consultarDb(String stringId) {
 
+    /**
+     * METODO QUE BUSCA NO BANCO E RETORNA OS DADOS
+     *
+     * @param id ID DE CONSULTA NO BANCO (IDENTIFICADOR UNICO DO ARDUINO)
+     * @return RETORNA OS DADOS DO BANCO PARA SINTETIZAR
+     */
+    public String buscarDb(String id) {
+        String dados = "";
 
         int filtroSql = 0;
         try {
-            filtroSql = Integer.parseInt(stringId);
+            filtroSql = Integer.parseInt(id);
         } catch (Exception e) {
             filtroSql = 0;
         }
@@ -289,23 +313,30 @@ public class MainBluetoothActivity extends ActionBarActivity {
         } catch (Exception e) {
             textSpace.setText(MSG_DB_0001 + " Ocorreu um erro ao consutar no base de dados");
             Log.e(MSG_DB_0001, "Ocorreu um erro ao consutar no base de dados:" + e.getMessage());
+
         }
 
         if (retorno == null) {
             textSpace.setText(MSG_DB_0001 + " Atenção! registro não localizado");
             Log.i(MSG_DB_0001, "Atenção! registro não localizado");
+            dados = null;
         } else {
-            textSpace.setText("Você esta conectado com o semaforo: " + retorno.getDevName() + " localizado na " + "\n" + retorno.getRua()
-                    + "\n" + retorno.getComplemento()
-                    + "\n" + retorno.getCruzamento());
-        }
-    }
+            dados = "Você está conectado com o semáforo: " + retorno.getDevName() + " localizado na " + "\n" + retorno.getRua()
+                    // + "\n" + retorno.getComplemento()
+                    + "\n" + retorno.getCruzamento();
 
+            textSpace.setText(dados);
+        }
+
+        return (dados);
+
+    }
 
     public static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
+            MainBluetoothActivity sintetize = new MainBluetoothActivity();
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
             Date hora = Calendar.getInstance().getTime(); // Ou qualquer outra forma que tem
@@ -319,11 +350,19 @@ public class MainBluetoothActivity extends ActionBarActivity {
 
             if (dataString == null) {
                 statusMessage.setText("Data String esta vazio");
+                sintetize.sintezar("Data String esta vazio");
             }
-            if (dataString.equals("---N"))
-                statusMessage.setText("Ocorreu um erro durante a conexão D:");
-            else if (dataString.equals("---S")) {
+            if (dataString.equals("---N")) {
+
+                statusMessage.setText("Atenção! Ocorreu um erro durante a conexão.");
+
+                sintetize.sintezar("Atenção! Ocorreu um erro durante a conexão.");
+
+
+            } else if (dataString.equals("---S")) {
                 statusMessage.setText("Conectado :D");
+                // sintetize.sintezar("conectado!");
+
                 habilitaBotoes();
             } else {
 
@@ -377,20 +416,40 @@ public class MainBluetoothActivity extends ActionBarActivity {
                     try {
 
                         /** IDENTIFICA O ARDUINDO COM BASE NO ID RECEBIDO **/
-                        if (arrayDeDados[0].equals("1")) {
-                            textSpace.append("Dados Recebidos do arduino nº: " + arrayDeDados[0] + "\n");
+                        // if (arrayDeDados[0].equals("1")) {
+                        String arduinomsg = "Dados Recebidos!";
+                        textSpace.append(arduinomsg + "\n");
+                        if (sintetize.buscarDb(arrayDeDados[0]) == null) {
+                            arduinomsg = arduinomsg + " Semáforo não encontrado!";
 
-                        } else {
-                            textSpace.append("Arduino  não encontrado" + "\n");
                         }
+
+
+                        // sintetize.sintezar("Dados Recebidos do arduino nº: " + arrayDeDados[0] + "\n");
+
+                        //  } else {
+                        //      textSpace.append("Arduino  não encontrado" + "\n");
+                        //      sintetize.sintezar("Arduino  não encontrado");
+                        //  }
+                        String situacaoSinal = "";
 
                         /** CASO O SINAL ESTEJA ABERTO OU
                          * O TIMER MINIMO NÃO SEJA EXCEDIDO ALERTA AO USUÁRIO
                          * QUE O SINAL ESTÁ VERDES **/
                         if (arrayDeDados[1].equals("0") & timer > 5000) {
-                            textSpace.append("Siga em frente sinal verde para os pedestres" + "\n");
+                            situacaoSinal = "Siga em frente, sinal aberto para os pedestres";
+                            textSpace.append(arduinomsg + situacaoSinal + "\n");
+                            sintetize.sintezar(arduinomsg + situacaoSinal);
                         } else {
-                            textSpace.append("Pare! O sinal não esta verde para os pedestres" + "\n");
+                            situacaoSinal = "Pare! Sinal fechado para os pedestres.";
+                            if (sintetize.buscarDb(arrayDeDados[0]) == null) {
+                                sintetize.sintezar(arduinomsg + situacaoSinal);
+                                textSpace.append(arduinomsg + situacaoSinal);
+                            } else {
+                                sintetize.sintezar(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]));
+                                textSpace.append(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]));
+                            }
+
                         }
 
                         // textSpace.append(dados);
@@ -403,9 +462,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
 
                 }
 
-
             }
-
 
         }
 
@@ -416,10 +473,12 @@ public class MainBluetoothActivity extends ActionBarActivity {
         textSpace.setText("");
     }
 
+
     String m_Text = "";
 
-
     public void bt_Buscar(View view) {
+
+
         /**
          * CRIA E CHAMA O MODAL DE IMPUT
          */
@@ -432,33 +491,8 @@ public class MainBluetoothActivity extends ActionBarActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_Text = input.getText().toString();
+                sintezar(buscarDb(m_Text));
 
-                int filtroSql = 0;
-                try {
-                    filtroSql = Integer.parseInt(m_Text);
-                } catch (Exception e) {
-                    filtroSql = 0;
-                }
-
-                /**
-                 * EFETUA A BUSCA CONFORME O RETORNO DO MODAL   */
-                Transmissor retorno = null;
-
-                try {
-                    retorno = dao.buscarTransmissorPorId(filtroSql);
-                } catch (Exception e) {
-                    textSpace.setText(MSG_DB_0001 + " Ocorreu um erro ao consutar no base de dados");
-                    Log.e(MSG_DB_0001, "Ocorreu um erro ao consutar no base de dados:" + e.getMessage());
-                }
-
-                if (retorno == null) {
-                    textSpace.setText(MSG_DB_0001 + " Atenção! registro não localizado");
-                    Log.i(MSG_DB_0001, "Atenção! registro não localizado");
-                } else {
-                    textSpace.setText("Você esta conectado com o semaforo: " + retorno.getDevName() + " localizado na " + "\n" + retorno.getRua()
-                            + "\n" + retorno.getComplemento()
-                            + "\n" + retorno.getCruzamento());
-                }
             }
         })
         ;

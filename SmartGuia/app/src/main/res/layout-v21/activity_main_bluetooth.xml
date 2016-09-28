@@ -74,7 +74,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:enabled="false" />
+        android:enabled="false"
+        android:text="1;1;10000."
+        android:textColor="#f61616" />
 
     <Button
         android:id="@+id/button_Send"
