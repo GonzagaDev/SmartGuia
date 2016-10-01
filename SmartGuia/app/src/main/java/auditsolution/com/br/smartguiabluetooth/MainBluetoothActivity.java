@@ -47,7 +47,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
     static TextView messageBox;
     static Button btSend;
     static Button bt_clear;
-    static Button bt_buscar;
+    static Button bt_buscar, bt_connect, bt_dispositivoPareados, bt_buscadispotivos;
     static Button bt_wait;
     static Button bt_ficarVisivel;
     static MenuItem menuUser;
@@ -73,9 +73,12 @@ public class MainBluetoothActivity extends ActionBarActivity {
         bt_clear = (Button) findViewById(R.id.bt_clear);
         messageBox = (TextView) findViewById(R.id.editText_MessageBox);
         bt_buscar = (Button) findViewById(R.id.bt_consultar);
+        bt_connect = (Button) findViewById(R.id.bt_connect);
         bt_wait = (Button) findViewById(R.id.button_WaitConnection);
         bt_ficarVisivel = (Button) findViewById(R.id.button_Visibility);
         bt_ficarVisivel = (Button) findViewById(R.id.button_Visibility);
+        bt_dispositivoPareados = (Button) findViewById(R.id.button_PairedDevices);
+        bt_buscadispotivos = (Button) findViewById(R.id.button_DiscoveredDevices);
         menuUser = (MenuItem) findViewById(R.id.action_user);
         menuTest = (MenuItem) findViewById(R.id.action_test);
 
@@ -108,10 +111,23 @@ public class MainBluetoothActivity extends ActionBarActivity {
             }
         }
         sintezar(msgInicio + msgAdapter);
-
         invisibleBotoes();
+
+        ConnectaArduino();
+
+
     }
 
+    public void bt_connect(View View) {
+        ConnectaArduino();
+    }
+
+    public void ConnectaArduino() {
+
+        statusMessage.setText("Buscando conexão!");
+        connect = new ConnectionThread("20:16:04:18:29:29");
+        connect.start();
+    }
 
     /**
      * METODO QUE SINTETIZA A STRING
@@ -135,7 +151,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
                         Log.e("TTS", "Este idioma não é Suportado");
                     } else {
                         //  speakOut();
-                        roboSintetizador.speak(texto, TextToSpeech.QUEUE_ADD, null);
+                        roboSintetizador.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
                     }
                 } else {
                     Log.e("TTS", "A inicialização Falhou!");
@@ -163,6 +179,9 @@ public class MainBluetoothActivity extends ActionBarActivity {
         statusMessage.setVisibility(View.INVISIBLE);
         textSpace.setVisibility(View.VISIBLE);
         messageBox.setVisibility(View.INVISIBLE);
+        bt_buscadispotivos.setVisibility(View.INVISIBLE);
+        bt_dispositivoPareados.setVisibility(View.INVISIBLE);
+
 
     }
 
@@ -179,6 +198,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
         statusMessage.setVisibility(View.VISIBLE);
         textSpace.setVisibility(View.VISIBLE);
         messageBox.setVisibility(View.VISIBLE);
+        bt_dispositivoPareados.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -234,7 +254,9 @@ public class MainBluetoothActivity extends ActionBarActivity {
 
                 statusMessage.setText("Você selecionou " + data.getStringExtra("btDevName"));
 
+
                 connect = new ConnectionThread(data.getStringExtra("btDevAddress"));
+
                 connect.start();
             } else {
                 statusMessage.setText("Nenhum dispositivo selecionado :(");
@@ -321,7 +343,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
             Log.i(MSG_DB_0001, "Atenção! registro não localizado");
             dados = null;
         } else {
-            dados = "Você está conectado com o semáforo: " + retorno.getDevName() + " localizado na " + "\n" + retorno.getRua()
+            dados = "Conectado ao semáforo: " + retorno.getDevName() + " localizado na " + "\n" + retorno.getRua()
                     // + "\n" + retorno.getComplemento()
                     + "\n" + retorno.getCruzamento();
 
@@ -417,7 +439,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
 
                         /** IDENTIFICA O ARDUINDO COM BASE NO ID RECEBIDO **/
                         // if (arrayDeDados[0].equals("1")) {
-                        String arduinomsg = "Dados Recebidos!";
+                        String arduinomsg = "";//"Dados Recebidos!";
                         textSpace.append(arduinomsg + "\n");
                         if (sintetize.buscarDb(arrayDeDados[0]) == null) {
                             arduinomsg = arduinomsg + " Semáforo não encontrado!";

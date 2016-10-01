@@ -83,13 +83,12 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/editText_MessageBox"
-        android:layout_alignEnd="@+id/editText_MessageBox"
-        android:layout_alignRight="@+id/editText_MessageBox"
         android:onClick="sendMessage"
         android:text="Enviar"
         android:enabled="false"
-        android:layout_alignParentTop="false" />
+        android:layout_below="@+id/bt_clear"
+        android:layout_alignRight="@+id/textSpace"
+        android:layout_alignEnd="@+id/textSpace" />
 
 
     <ScrollView
@@ -102,6 +101,17 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buscar Db"
+            android:id="@+id/bt_consultar"
+            android:onClick="bt_Buscar"
+            android:layout_above="@+id/button_Send"
+            android:layout_alignRight="@+id/button_Send"
+            android:layout_alignEnd="@+id/button_Send"
+            android:layout_alignLeft="@+id/bt_clear"
+            android:layout_alignStart="@+id/bt_clear" />
     </ScrollView>
 
     <TextView
@@ -131,14 +141,15 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Buscar Db"
-        android:id="@+id/bt_consultar"
-        android:onClick="bt_Buscar"
-        android:layout_above="@+id/button_Send"
-        android:layout_alignRight="@+id/button_Send"
-        android:layout_alignEnd="@+id/button_Send"
-        android:layout_alignLeft="@+id/bt_clear"
-        android:layout_alignStart="@+id/bt_clear" />
+        android:text="Conectar"
+        android:id="@+id/bt_connect"
+        android:onClick="bt_connect"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_above="@+id/editText_MessageBox"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
 
