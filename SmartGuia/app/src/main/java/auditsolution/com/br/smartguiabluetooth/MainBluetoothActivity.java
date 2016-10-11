@@ -47,7 +47,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
     static TextView messageBox;
     static Button btSend;
     static Button bt_clear;
-    static Button bt_buscar, bt_connect, bt_dispositivoPareados, bt_buscadispotivos;
+    static Button bt_buscar,  bt_dispositivoPareados, bt_buscadispotivos;
     static Button bt_wait;
     static Button bt_ficarVisivel;
     static MenuItem menuUser;
@@ -73,7 +73,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
         bt_clear = (Button) findViewById(R.id.bt_clear);
         messageBox = (TextView) findViewById(R.id.editText_MessageBox);
         bt_buscar = (Button) findViewById(R.id.bt_consultar);
-        bt_connect = (Button) findViewById(R.id.bt_conectar);
+
         bt_wait = (Button) findViewById(R.id.button_WaitConnection);
         bt_ficarVisivel = (Button) findViewById(R.id.button_Visibility);
         bt_ficarVisivel = (Button) findViewById(R.id.button_Visibility);
@@ -120,7 +120,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
 
     public void ConnectaArduino() {
         statusMessage.setText("Buscando conexão!");
-        bt_connect.setVisibility(View.INVISIBLE);
+
         //sintezar("Buscando conexão!");
         textSpace.setText("Buscando conexão!");
 
@@ -381,13 +381,13 @@ public class MainBluetoothActivity extends ActionBarActivity {
                 statusMessage.setText(msgConnexao);
                 //sintetize.sintezar(msgConnexao);
                 textSpace.setText(msgConnexao);
-                bt_connect.setVisibility(View.VISIBLE);
+
 
 
             } else if (dataString.equals("---S")) {
                 statusMessage.setText("Conectado :D");
                 // sintetize.sintezar("conectado!");
-                bt_connect.setVisibility(View.INVISIBLE);
+
 
                 habilitaBotoes();
             } else {
