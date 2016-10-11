@@ -51,9 +51,9 @@ public class PairedDevices extends ListActivity {
         }
     }
     /*tentar medir pontencia
-    int rssi = inten.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
+    int rssi = intShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
     Toast.makeText(getApplicationContext(), " RSSI: " + rssi + "dBm", Toast.LENGTH_SHORT).show();
-    */
+    //*/
 
 
     /*  Este método é executado quando o usuário seleciona um elemento da lista.

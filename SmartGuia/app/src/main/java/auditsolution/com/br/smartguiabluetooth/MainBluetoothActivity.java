@@ -1,13 +1,13 @@
 package auditsolution.com.br.smartguiabluetooth;
 
-import android.app.Activity;
+
 import android.app.AlertDialog;
-import android.app.Application;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.ContextWrapper;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
@@ -73,7 +73,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
         bt_clear = (Button) findViewById(R.id.bt_clear);
         messageBox = (TextView) findViewById(R.id.editText_MessageBox);
         bt_buscar = (Button) findViewById(R.id.bt_consultar);
-        bt_connect = (Button) findViewById(R.id.bt_connect);
+        bt_connect = (Button) findViewById(R.id.bt_conectar);
         bt_wait = (Button) findViewById(R.id.button_WaitConnection);
         bt_ficarVisivel = (Button) findViewById(R.id.button_Visibility);
         bt_ficarVisivel = (Button) findViewById(R.id.button_Visibility);
@@ -103,31 +103,34 @@ public class MainBluetoothActivity extends ActionBarActivity {
                  */
 
                 btAdapter.enable();
-
+                ConnectaArduino();
             } else {
                 msgAdapter = "Bluetooth já ativado :)";
                 statusMessage.setText(msgAdapter);
+                ConnectaArduino();
 
             }
         }
         sintezar(msgInicio + msgAdapter);
         invisibleBotoes();
 
-        ConnectaArduino();
-
 
     }
 
-    public void bt_connect(View View) {
-        ConnectaArduino();
-    }
 
     public void ConnectaArduino() {
-
         statusMessage.setText("Buscando conexão!");
+        bt_connect.setVisibility(View.INVISIBLE);
+        //sintezar("Buscando conexão!");
+        textSpace.setText("Buscando conexão!");
+
         connect = new ConnectionThread("20:16:04:18:29:29");
+
+        //  connect.destroy();
         connect.start();
     }
+
+
 
     /**
      * METODO QUE SINTETIZA A STRING
@@ -333,21 +336,20 @@ public class MainBluetoothActivity extends ActionBarActivity {
         try {
             retorno = dao.buscarTransmissorPorId(filtroSql);
         } catch (Exception e) {
-            textSpace.setText(MSG_DB_0001 + " Ocorreu um erro ao consutar no base de dados");
+            textSpace.setText(MSG_DB_0001 + " Ocorreu um erro ao consutar no base de dados.");
             Log.e(MSG_DB_0001, "Ocorreu um erro ao consutar no base de dados:" + e.getMessage());
 
         }
 
         if (retorno == null) {
-            textSpace.setText(MSG_DB_0001 + " Atenção! registro não localizado");
+            textSpace.setText(MSG_DB_0001 + " Atenção! registro não localizado.");
             Log.i(MSG_DB_0001, "Atenção! registro não localizado");
             dados = null;
         } else {
-            dados = "Conectado ao semáforo: " + retorno.getDevName() + " localizado na " + "\n" + retorno.getRua()
-                    // + "\n" + retorno.getComplemento()
-                    + "\n" + retorno.getCruzamento();
+            dados = "Conectado com o semáforo localizado na " + "\n" + retorno.getRua()
+                    + "\n" + retorno.getComplemento();
+            //+ "\n" + retorno.getCruzamento();
 
-            textSpace.setText(dados);
         }
 
         return (dados);
@@ -375,15 +377,17 @@ public class MainBluetoothActivity extends ActionBarActivity {
                 sintetize.sintezar("Data String esta vazio");
             }
             if (dataString.equals("---N")) {
-
-                statusMessage.setText("Atenção! Ocorreu um erro durante a conexão.");
-
-                sintetize.sintezar("Atenção! Ocorreu um erro durante a conexão.");
+                String msgConnexao = "Atenção! Ocorreu um erro durante a conexão.";
+                statusMessage.setText(msgConnexao);
+                //sintetize.sintezar(msgConnexao);
+                textSpace.setText(msgConnexao);
+                bt_connect.setVisibility(View.VISIBLE);
 
 
             } else if (dataString.equals("---S")) {
                 statusMessage.setText("Conectado :D");
                 // sintetize.sintezar("conectado!");
+                bt_connect.setVisibility(View.INVISIBLE);
 
                 habilitaBotoes();
             } else {
@@ -459,17 +463,19 @@ public class MainBluetoothActivity extends ActionBarActivity {
                          * O TIMER MINIMO NÃO SEJA EXCEDIDO ALERTA AO USUÁRIO
                          * QUE O SINAL ESTÁ VERDES **/
                         if (arrayDeDados[1].equals("0") & timer > 5000) {
-                            situacaoSinal = "Siga em frente, sinal aberto para os pedestres";
-                            textSpace.append(arduinomsg + situacaoSinal + "\n");
+                            situacaoSinal = "Siga em frente, sinal aberto para os pedestres. ";
+                            textSpace.setText(arduinomsg + situacaoSinal + "\n");
                             sintetize.sintezar(arduinomsg + situacaoSinal);
                         } else {
-                            situacaoSinal = "Pare! Sinal fechado para os pedestres.";
+                            situacaoSinal = "Pare! Sinal fechado para os pedestres. ";
                             if (sintetize.buscarDb(arrayDeDados[0]) == null) {
                                 sintetize.sintezar(arduinomsg + situacaoSinal);
+                                textSpace.setText("");
                                 textSpace.append(arduinomsg + situacaoSinal);
                             } else {
-                                sintetize.sintezar(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]));
-                                textSpace.append(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]));
+                                textSpace.setText("");
+                                sintetize.sintezar(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + ". ");
+                                textSpace.append(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + ". ");
                             }
 
                         }

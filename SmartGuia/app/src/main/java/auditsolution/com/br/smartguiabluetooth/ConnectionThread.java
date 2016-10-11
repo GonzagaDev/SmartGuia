@@ -116,6 +116,7 @@ public class ConnectionThread extends Thread {
                  */
                 btAdapter.cancelDiscovery();
 
+
                 /*  Solicita uma conexão ao dispositivo cujo endereço é
                 btDevAddress.
                     Permanece em estado de espera até que a conexão seja
@@ -132,6 +133,8 @@ public class ConnectionThread extends Thread {
                  */
                 e.printStackTrace();
                 toMainActivity("---N".getBytes());
+
+
             }
 
         }
@@ -174,7 +177,9 @@ public class ConnectionThread extends Thread {
                 while (running) {
 
                     bytes = input.read(buffer);
+
                     int tamanho = buffer.toString().length();
+
 
                     if (tamanho < 10) {
                         Log.e("Tamanho não esperado", "Atenção! a aplicação esta preparada para receber dados com mais de 10 carcteres, recebeu:" + tamanho);
@@ -184,6 +189,7 @@ public class ConnectionThread extends Thread {
 
                 }
 
+
             } catch (IOException e) {
 
                 /*  Caso ocorra alguma exceção, exibe o stack trace para debug.
@@ -192,6 +198,12 @@ public class ConnectionThread extends Thread {
                  */
                 e.printStackTrace();
                 toMainActivity("---N".getBytes());
+
+                /**
+                 *  CASO OCORRA UM ERRO DURANTE A CONEXÃO, UMA NOVA TENTATIVA É REALIZADA
+                 */
+                ConnectionThread connect = new ConnectionThread("20:16:04:18:29:29");
+                connect.start();
             }
         }
 
@@ -238,6 +250,8 @@ public class ConnectionThread extends Thread {
              */
             toMainActivity("---N".getBytes());
         }
+
+
     }
 
     /*  Método utilizado pela Activity principal para encerrar a conexão

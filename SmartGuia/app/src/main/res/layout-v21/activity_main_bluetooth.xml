@@ -2,14 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/fundo09"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
 
-    tools:context="auditsolution.com.br.smartguiabluetooth.MainBluetoothActivity"
-    android:background="@drawable/fundo09">
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="auditsolution.com.br.smartguiabluetooth.MainBluetoothActivity">
 
     <TextView
         android:id="@+id/statusMessage"
@@ -18,9 +18,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:autoText="false"
         android:text="Status Comunicação"
-        android:theme="@android:style/Theme.Material.Wallpaper.NoTitleBar"
-        android:autoText="false" />
+        android:theme="@android:style/Theme.Material.Wallpaper.NoTitleBar" />
 
     <Button
         android:id="@+id/button_PairedDevices"
@@ -37,37 +37,37 @@
         android:id="@+id/button_DiscoveredDevices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="discoverDevices"
-        android:text="Iniciar descoberta\n de dispositivos"
-        android:layout_alignTop="@+id/button_PairedDevices"
-        android:layout_alignRight="@+id/bt_consultar"
         android:layout_alignEnd="@+id/bt_consultar"
         android:layout_alignLeft="@+id/button_WaitConnection"
-        android:layout_alignStart="@+id/button_WaitConnection" />
+        android:layout_alignRight="@+id/bt_consultar"
+        android:layout_alignStart="@+id/button_WaitConnection"
+        android:layout_alignTop="@+id/button_PairedDevices"
+        android:onClick="discoverDevices"
+        android:text="Iniciar descoberta\n de dispositivos" />
 
     <Button
         android:id="@+id/button_WaitConnection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="waitConnection"
-        android:text="Esperar\nconexão"
         android:layout_alignTop="@+id/button_Visibility"
         android:layout_toLeftOf="@+id/bt_clear"
-        android:layout_toStartOf="@+id/bt_clear" />
+        android:layout_toStartOf="@+id/bt_clear"
+        android:onClick="waitConnection"
+        android:text="Esperar\nconexão" />
 
     <Button
         android:id="@+id/button_Visibility"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/button_PairedDevices"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/button_PairedDevices"
         android:layout_below="@+id/button_PairedDevices"
         android:onClick="enableVisibility"
-        android:text="Habilitar\nVisibilidade"
-        android:layout_alignRight="@+id/button_PairedDevices"
-        android:layout_alignEnd="@+id/button_PairedDevices" />
+        android:text="Habilitar\nVisibilidade" />
 
-    <EditText
+    <TextView
         android:id="@+id/editText_MessageBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -83,73 +83,61 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="sendMessage"
-        android:text="Enviar"
-        android:enabled="false"
-        android:layout_below="@+id/bt_clear"
+        android:layout_alignEnd="@+id/textSpace"
         android:layout_alignRight="@+id/textSpace"
-        android:layout_alignEnd="@+id/textSpace" />
+        android:layout_below="@+id/bt_clear"
+        android:enabled="false"
+        android:onClick="sendMessage"
+        android:text="Enviar" />
 
 
     <ScrollView
         android:id="@+id/ScrollView01"
         android:layout_width="wrap_content"
         android:layout_height="150dip"
-        android:layout_alignRight="@+id/button_Send"
         android:layout_alignEnd="@+id/button_Send"
-        android:layout_below="@+id/button_WaitConnection"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/button_Send"
+        android:layout_below="@+id/button_WaitConnection">
 
         <Button
+            android:id="@+id/bt_consultar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Buscar Db"
-            android:id="@+id/bt_consultar"
-            android:onClick="bt_Buscar"
             android:layout_above="@+id/button_Send"
-            android:layout_alignRight="@+id/button_Send"
             android:layout_alignEnd="@+id/button_Send"
             android:layout_alignLeft="@+id/bt_clear"
-            android:layout_alignStart="@+id/bt_clear" />
+            android:layout_alignRight="@+id/button_Send"
+            android:layout_alignStart="@+id/bt_clear"
+            android:onClick="bt_Buscar"
+            android:text="Buscar Db" />
     </ScrollView>
 
     <TextView
         android:id="@+id/textSpace"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:layout_below="@+id/button_Visibility"
-        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@+id/ScrollView01"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/ScrollView01"
+        android:layout_below="@+id/button_Visibility"
+        android:text=""
         android:textColor="#fffefe" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Limpar"
         android:id="@+id/bt_clear"
-        android:layout_alignBottom="@+id/button_WaitConnection"
-        android:layout_alignRight="@+id/ScrollView01"
-        android:layout_alignEnd="@+id/ScrollView01"
-        android:onClick="Bt_clear"
-        android:layout_below="@+id/button_DiscoveredDevices" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Conectar"
-        android:id="@+id/bt_connect"
-        android:onClick="bt_connect"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_above="@+id/editText_MessageBox"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignBottom="@+id/button_WaitConnection"
+        android:layout_alignEnd="@+id/ScrollView01"
+        android:layout_alignRight="@+id/ScrollView01"
+        android:layout_below="@+id/button_DiscoveredDevices"
+        android:onClick="Bt_clear"
+        android:text="Limpar" />
+
 
 </RelativeLayout>
 
