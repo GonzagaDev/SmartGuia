@@ -347,7 +347,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
             Log.i(MSG_DB_0001, "Atenção! registro não localizado");
             dados = null;
         } else {
-            dados =  retorno.getRua();
+            dados = retorno.getRua() + ", " + retorno.getComplemento();
             //+ "\n" + retorno.getCruzamento();
 
         }
@@ -463,8 +463,8 @@ public class MainBluetoothActivity extends ActionBarActivity {
                          * QUE O SINAL ESTÁ VERDES **/
                         if (arrayDeDados[1].equals("0") & timer > 5000) {
                             situacaoSinal = "Semáforo da ";
-                            textSpace.setText(arduinomsg + situacaoSinal +sintetize.buscarDb(arrayDeDados[0])+", aberto para os pedestres."+ "\n");
-                            sintetize.sintezar(arduinomsg + situacaoSinal+ sintetize.buscarDb(arrayDeDados[0])+", aberto para os pedestres.");
+                            textSpace.setText(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + ", está aberto para os pedestres." + "\n");
+                            sintetize.sintezar(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + ", está aberto para os pedestres.");
                         } else {
                             situacaoSinal = "Semáforo da ";
                             if (sintetize.buscarDb(arrayDeDados[0]) == null) {
@@ -473,8 +473,8 @@ public class MainBluetoothActivity extends ActionBarActivity {
                                 textSpace.append(arduinomsg + situacaoSinal);
                             } else {
                                 textSpace.setText("");
-                                sintetize.sintezar(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + ", fechado para os pedestres. ");
-                                textSpace.append(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + ", fechado para os pedestres. ");
+                                sintetize.sintezar(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + "" + ", está fechado para os pedestres. ");
+                                textSpace.append(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + ", está fechado para os pedestres. ");
                             }
 
                         }

@@ -28,8 +28,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "devAddress text not null)");
 
         //CRIA O REGISTRO DO ARDUÍNO Nº1
-        db.execSQL("insert into transmissor(serial, rua, cruzamento, complemento, devName, devAddress) values (1, 'Rua Gonçalves Ledo','Semáforo 1'," +
-                "'Cruzamento com Avenida Centenário','HC-05','20:16:04:18:29:29')");
+        db.execSQL("insert into transmissor(serial, rua, cruzamento, complemento, devName, devAddress) values (1, 'Rua Gonçalves Ledo','Cruzamento com Avenida Centenário'," +
+                "'ao lado da Rodoviária','HC-05','20:16:04:18:29:29')");
 
 
     }
