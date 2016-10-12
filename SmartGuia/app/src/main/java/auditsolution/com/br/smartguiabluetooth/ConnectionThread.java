@@ -55,7 +55,7 @@ public class ConnectionThread extends Thread {
      */
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public void run() {
-
+        String globalTry = "";
         /*  Anuncia que a thread está sendo executada.
             Pega uma referência para o adaptador Bluetooth padrão.
          */
@@ -95,14 +95,17 @@ public class ConnectionThread extends Thread {
                  */
                 e.printStackTrace();
                 toMainActivity("---N".getBytes());
+
             }
 
 
         } else {
 
+
             /*  Cliente.
              */
             try {
+
 
                 /*  Obtem uma representação do dispositivo Bluetooth com
                 endereço btDevAddress.
@@ -134,7 +137,12 @@ public class ConnectionThread extends Thread {
                 e.printStackTrace();
                 toMainActivity("---N".getBytes());
 
-
+                /**
+                 *  CASO OCORRA UM ERRO DURANTE A CONEXÃO, UMA NOVA TENTATIVA É REALIZADA
+                 */
+                globalTry = "S";
+                ConnectionThread connect = new ConnectionThread("20:16:04:18:29:29");
+                connect.start();
             }
 
         }
@@ -185,10 +193,7 @@ public class ConnectionThread extends Thread {
                         Log.e("Tamanho não esperado", "Atenção! a aplicação esta preparada para receber dados com mais de 10 carcteres, recebeu:" + tamanho);
                     }
                     toMainActivity(Arrays.copyOfRange(buffer, 0, bytes));
-
-
                 }
-
 
             } catch (IOException e) {
 
@@ -199,11 +204,15 @@ public class ConnectionThread extends Thread {
                 e.printStackTrace();
                 toMainActivity("---N".getBytes());
 
-                /**
-                 *  CASO OCORRA UM ERRO DURANTE A CONEXÃO, UMA NOVA TENTATIVA É REALIZADA
-                 */
-                ConnectionThread connect = new ConnectionThread("20:16:04:18:29:29");
-                connect.start();
+                if (globalTry.equals("")) {
+                    /**
+                     *  CASO OCORRA UM ERRO DURANTE A CONEXÃO, UMA NOVA TENTATIVA É REALIZADA tentativa desesperada de funcionar
+                     */
+                    ConnectionThread connect = new ConnectionThread("20:16:04:18:29:29");
+                    connect.start();
+                }
+
+
             }
         }
 
@@ -249,6 +258,8 @@ public class ConnectionThread extends Thread {
             /*  Envia à Activity principal um código de erro durante a conexão.
              */
             toMainActivity("---N".getBytes());
+
+
         }
 
 

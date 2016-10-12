@@ -47,7 +47,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
     static TextView messageBox;
     static Button btSend;
     static Button bt_clear;
-    static Button bt_buscar,  bt_dispositivoPareados, bt_buscadispotivos;
+    static Button bt_buscar, bt_dispositivoPareados, bt_buscadispotivos;
     static Button bt_wait;
     static Button bt_ficarVisivel;
     static MenuItem menuUser;
@@ -110,7 +110,9 @@ public class MainBluetoothActivity extends ActionBarActivity {
                 ConnectaArduino();
 
             }
+
         }
+
         sintezar(msgInicio + msgAdapter);
         invisibleBotoes();
 
@@ -129,7 +131,6 @@ public class MainBluetoothActivity extends ActionBarActivity {
         //  connect.destroy();
         connect.start();
     }
-
 
 
     /**
@@ -346,8 +347,7 @@ public class MainBluetoothActivity extends ActionBarActivity {
             Log.i(MSG_DB_0001, "Atenção! registro não localizado");
             dados = null;
         } else {
-            dados = "Conectado com o semáforo localizado na " + "\n" + retorno.getRua()
-                    + "\n" + retorno.getComplemento();
+            dados =  retorno.getRua();
             //+ "\n" + retorno.getCruzamento();
 
         }
@@ -381,7 +381,6 @@ public class MainBluetoothActivity extends ActionBarActivity {
                 statusMessage.setText(msgConnexao);
                 //sintetize.sintezar(msgConnexao);
                 textSpace.setText(msgConnexao);
-
 
 
             } else if (dataString.equals("---S")) {
@@ -463,19 +462,19 @@ public class MainBluetoothActivity extends ActionBarActivity {
                          * O TIMER MINIMO NÃO SEJA EXCEDIDO ALERTA AO USUÁRIO
                          * QUE O SINAL ESTÁ VERDES **/
                         if (arrayDeDados[1].equals("0") & timer > 5000) {
-                            situacaoSinal = "Siga em frente, sinal aberto para os pedestres. ";
-                            textSpace.setText(arduinomsg + situacaoSinal + "\n");
-                            sintetize.sintezar(arduinomsg + situacaoSinal);
+                            situacaoSinal = "Semáforo da ";
+                            textSpace.setText(arduinomsg + situacaoSinal +sintetize.buscarDb(arrayDeDados[0])+", aberto para os pedestres."+ "\n");
+                            sintetize.sintezar(arduinomsg + situacaoSinal+ sintetize.buscarDb(arrayDeDados[0])+", aberto para os pedestres.");
                         } else {
-                            situacaoSinal = "Pare! Sinal fechado para os pedestres. ";
+                            situacaoSinal = "Semáforo da ";
                             if (sintetize.buscarDb(arrayDeDados[0]) == null) {
                                 sintetize.sintezar(arduinomsg + situacaoSinal);
                                 textSpace.setText("");
                                 textSpace.append(arduinomsg + situacaoSinal);
                             } else {
                                 textSpace.setText("");
-                                sintetize.sintezar(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + ". ");
-                                textSpace.append(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + ". ");
+                                sintetize.sintezar(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + ", fechado para os pedestres. ");
+                                textSpace.append(arduinomsg + situacaoSinal + sintetize.buscarDb(arrayDeDados[0]) + ", fechado para os pedestres. ");
                             }
 
                         }
